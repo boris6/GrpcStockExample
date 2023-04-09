@@ -4,7 +4,7 @@ using GrpcStockExample;
 
 internal class Program
 {
-    static readonly string[] _symbols = new string[] { "MSFT", "GOOG", "AAPL", "AMZN", "META", "BABA", "Unknown" };
+    static readonly string[] Symbols = new string[] { "MSFT", "GOOG", "AAPL", "AMZN", "META", "BABA", "Unknown" };
     public static async Task Main(string[] args)
     {
         // Create a channel to the gRPC server.
@@ -13,7 +13,7 @@ internal class Program
         // Create a client to call the gRPC service.
         var client = new Stock.StockClient(channel);
 
-        foreach (var symbol in _symbols)
+        foreach (var symbol in Symbols)
         {
             try
             {
@@ -28,5 +28,8 @@ internal class Program
                 Console.WriteLine($"Error getting price for {symbol}. Status: {ex.Status.StatusCode}. Message: {ex.Status.Detail}");
             }
         }
+
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
     }
 }

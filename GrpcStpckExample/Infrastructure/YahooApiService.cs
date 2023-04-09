@@ -23,7 +23,6 @@ public class YahooApiService : IFinanceService
 
             var result = data.quoteSummary.result[0].financialData.currentPrice.raw;
 
-
             return (double)result;
         }
 
