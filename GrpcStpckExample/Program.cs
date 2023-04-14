@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IFinanceService, YahooApiService>();
 var app = builder.Build();
 

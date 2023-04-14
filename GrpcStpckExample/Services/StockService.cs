@@ -1,33 +1,31 @@
-﻿using System.Threading.Tasks;
-using Grpc.Core;
+﻿using Grpc.Core;
 using GrpcStockExample.Exceptions;
 using GrpcStockExample.Interfaces;
 
-namespace GrpcStockExample.Services
+namespace GrpcStockExample.Services;
+
+public class StockService : Stock.StockBase
 {
-    public class StockService : Stock.StockBase
+    private readonly IFinanceService _financeService;
+
+    public StockService(IFinanceService financeService)
     {
-        private readonly IFinanceService _financeService;
+        _financeService = financeService;
+    }
 
-        public StockService(IFinanceService financeService)
+    public override async Task<StockReply> GetStockPrice(StockRequest request, ServerCallContext context)
+    {
+        try
         {
-            _financeService = financeService;
+            var stockReply = new StockReply
+            {
+                Price = await _financeService.GetStockPrice(request.Name)
+            };
+            return stockReply;
         }
-
-        public override async Task<StockReply> GetStockPrice(StockRequest request, ServerCallContext context)
+        catch (SymbolNotFoundException e)
         {
-            try
-            {
-                var stockReply = new StockReply
-                {
-                    Price = await _financeService.GetStockPrice(request.Name)
-                };
-                return stockReply;
-            }
-            catch (SymbolNotFoundException e)
-            {
-                throw new RpcException(new Status(StatusCode.NotFound, "Stock price not found"));
-            }
+            throw new RpcException(new Status(StatusCode.NotFound, "Stock price not found"));
         }
     }
 }
